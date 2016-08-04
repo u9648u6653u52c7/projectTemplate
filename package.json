@@ -1,0 +1,20 @@
+{
+  "name": "project-template",
+  "version": "1.0.0",
+  "description": "A initial project template. It has gulp and webpack.",
+  "author": "Brave <u9648u6653u52c7@gmail.com>",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gulp",
+    "webpack",
+    "module",
+    "component"
+  ],
+  "license": "ISC"
+}
