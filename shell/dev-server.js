@@ -9,16 +9,14 @@ var config = require('../conf');
 var webpackDevConfig = require('../conf/webpack.dev');
 
 var server = new webpackDevServer(webpack(webpackDevConfig), {
+  // webpack-dev-server options
+  contentBase: config.dev.contentBase,
+  publicPath: "/assets/",
+  hot: true
 
-    // webpack-dev-server options
+  // pass [static options](http://expressjs.com/en/4x/api.html#express.static) to inner express server
 
-    contentBase: config.dev.contentBase,
-    publicPath: "/assets/",
-    hot: true
-
-    // pass [static options](http://expressjs.com/en/4x/api.html#express.static) to inner express server
-
-    // webpack-dev-middleware options
+  // webpack-dev-middleware options
 
 });
 

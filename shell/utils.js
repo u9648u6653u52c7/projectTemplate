@@ -67,8 +67,7 @@ function getEntries (dir) {
 			dict[generateUniqueKey(value, dict)] = [value];
 		}
 	});
-
-	return dict;
+  return dict;
 }
 
 
