@@ -6,5 +6,8 @@
 var path = require('path');
 
 module.exports = {
-	projectRoot: path.resolve(__dirname, '..')
+	projectRoot: path.resolve(__dirname, '..'),
+	dev: {
+		contentBase: path.resolve(__dirname, '../src')
+	}
 };
