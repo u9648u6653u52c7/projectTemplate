@@ -16,7 +16,7 @@ var path = require('path');
 function walkDir(dir) {
 	var fileList = [];
 	(function walk(dir) {
-		dir = path.resolve(process.cwd(), dir);
+		dir = path.resolve(__dirname, dir);
 		fs.readdirSync(dir).forEach(function (value, index) {
 			var realPath = path.resolve(dir, value),
 				stat = fs.statSync(realPath);
@@ -41,8 +41,7 @@ var entryFileTypeREG = /\.jsx?$/;
 
 function getEntries (dir) {
 	var dict = {}
-		,files = walkDir(dir)
-		,key = null;
+		,files = walkDir(dir);
 
 	/**
 	 * generateUniqueKey 生成入口对象的唯一key值
@@ -65,13 +64,13 @@ function getEntries (dir) {
 
 	files.forEach(function (value, index) {
 		if ( entryFileTypeREG.test(value) ) {
-			key = generateUniqueKey(value, dict);
-			dict[key] = value;
+			dict[generateUniqueKey(value, dict)] = [value];
 		}
 	});
 
 	return dict;
 }
+
 
 module.exports = {
 	walkDir: walkDir,
