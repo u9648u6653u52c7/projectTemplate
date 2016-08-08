@@ -9,7 +9,7 @@ var path = require('path');
 
 /**
  * walkDir 文件夹遍历
- * @param {String} path
+ * @param {String} dir
  * @return {Array} fileList
  */
 
@@ -34,40 +34,64 @@ function walkDir(dir) {
 var entryFileTypeREG = /\.jsx?$/;
 
 /**
- * getEntries 获取webpack配置的入口对象
- * @param dir
+ * getEntries 获取webpack的入口对象
+ * @param {String} dir
+ * @param {Boolean} flag 控制入口对象key值的输出形式：
+ * flag为真时key值以路径形式输出；
+ * flag为假时key值以文件名形式输出，文件名重复时会以其所在文件夹的名称命名key值；
+ * flag默认为假；
  * @returns {Object} dict
  */
 
-function getEntries (dir) {
+function getEntries (dir, flag) {
 	var dict = {}
+		,flag = flag || false
 		,files = walkDir(dir);
 
-	/**
-	 * generateUniqueKey 生成入口对象的唯一key值
-	 * @param {String} path
-	 * @param {Object} dict
-	 * @returns {String}
-	 */
+	var generateKey = (function (dir) {
 
-	function generateUniqueKey(path, dict) {
-		var arr = path.indexOf('/') != -1 ? path.split('/') : path.split('\\')
-			,i = arr.length
-			,key = null;
-		for (i-=1; 0 <= i; i--) {
-			key = entryFileTypeREG.test(arr[i]) ? arr[i].slice(0, arr[i].lastIndexOf('.')) : arr[i];
-			if ( !dict.hasOwnProperty(key) ) {
-				return key;
+		/**
+		 * generateUniqueKey 生成入口对象的唯一key值
+		 * @param {String} filePath
+		 * @param {Object} dict
+		 * @returns {String}
+		 */
+
+		function generateUniqueKey(filePath, dict) {
+			var arr = filePath.split(path.sep)
+				,i = arr.length
+				,key = null;
+			for (i-=1; 0 <= i; i--) {
+				key = entryFileTypeREG.test(arr[i]) ? arr[i].slice(0, arr[i].lastIndexOf('.')) : arr[i];
+				if ( !dict.hasOwnProperty(key) ) {
+					return key;
+				}
 			}
 		}
-	}
+
+		/**
+		 * generatePathKey
+		 * @param {String} filePath
+		 * @returns {String}
+		 */
+
+		function generatePathKey(filePath) {
+			var baseDir = path.resolve(__dirname, dir)
+				,key = filePath.slice(baseDir.length);
+			return key.slice(0, key.lastIndexOf('.'));  // 去掉后缀名
+		}
+
+		return flag ? generatePathKey : generateUniqueKey;
+
+	})(dir);
 
 	files.forEach(function (value, index) {
 		if ( entryFileTypeREG.test(value) ) {
-			dict[generateUniqueKey(value, dict)] = [value];
+			dict[generateKey(value, dict)] = [value];
 		}
 	});
-  return dict;
+
+    return dict;
 }
 
 
