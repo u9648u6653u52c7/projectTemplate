@@ -10,28 +10,29 @@ var conf = require('../conf');
 var webpackDevConfig = require('../conf/webpack.dev');
 
 var server = new webpackDevServer(webpack(webpackDevConfig), {
-  // webpack-dev-server options
+	// webpack-dev-server options
 
-  contentBase: conf.dev.www,
-  publicPath: conf.dev.publicPath,
-  hot: true,
-  historyApiFallback: false,
-  compress: true,
-  // proxy: {},  // 服务器代理功能根据需求自行配置
+	contentBase: conf.dev.www,
+	publicPath: conf.publicPath,
+	hot: true,
+	historyApiFallback: false,
+	compress: true,
+	// proxy: {},  // 服务器代理功能根据需求自行配置
 
-  // pass [static options](http://expressjs.com/en/4x/api.html#express.static) to inner express server
+	// pass [static options](http://expressjs.com/en/4x/api.html#express.static) to inner express server
 
-  // staticOptions: {},
+	// staticOptions: {},
 
-  // webpack-dev-middleware options
+	// webpack-dev-middleware options
 
-  noInfo: false,
-  stats: {
-    colors: true
-  }
+	noInfo: false,
+	stats: {
+		colors: true,
+		chunks: false
+	}
 
 });
 
-server.listen(conf.dev.port);
+server.listen(conf.dev.port, conf.dev.hostname);
 
 
