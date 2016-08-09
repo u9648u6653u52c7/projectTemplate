@@ -20,13 +20,6 @@ var config = {
 	chunkFilename: '[id].chunk.js'
   },
   module: {
-	preLoaders: [
-	  {
-		test: /\.jsx?$/,
-		loader: "eslint",
-		exclude: /node_modules|static/
-	  }
-	],
 	loaders: [
 	  {
 		test: /\.jsx?$/,
@@ -81,10 +74,6 @@ var config = {
   ],
   resolve: {
     extensions: ['', '.js', '.jsx', '.json']
-  },
-  eslint: {
-	configFile: path.resolve(conf.projectRoot, '.eslintrc.js'),
-	formatter: require("eslint-friendly-formatter")
   },
   node: {
 	fs: "empty" // avoids error messages
