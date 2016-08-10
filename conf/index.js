@@ -4,32 +4,34 @@
  */
 
 var path = require('path');
-var projectRoot = path.resolve(__dirname, '..');
+var projectRoot = path.resolve(__dirname, '..'),
+	projectName = projectRoot.slice(projectRoot.lastIndexOf(path.sep) + 1);
 
-module.exports = {
+
+exports = module.exports = {
 	projectRoot: projectRoot,
+	projectName: projectName,
 
 	/**
-	*  Webpack 默认配置
+	*  Webpack默认配置
 	*/
 
 	entryFileDir: path.resolve(projectRoot, 'src/pages'),
 	entryKeyType: true,  // 入口对象的key值类型：true为path类型，false为文件名
 	assetsRoot: path.resolve(projectRoot, 'dist'),
-	publicPath: '/assets/',
 
 	/**
-	*  Webpack 开发配置
+	*  Webpack开发配置
 	*/
 
 	dev: {
 		hostname: 'localhost',
-		www: path.resolve(projectRoot, 'dist'),
+		www: path.resolve(projectRoot, 'src'),
 		port: '8000'
 	},
 
 	/**
-	*  Webpack 生产配置
+	*  Webpack生产配置
 	*/
 
 	prod: {
