@@ -17,15 +17,19 @@ function walkDir(dir) {
 	var fileList = [];
 	(function walk(dir) {
 		dir = path.resolve(__dirname, dir);
-		fs.readdirSync(dir).forEach(function (value, index) {
-			var realPath = path.resolve(dir, value),
-				stat = fs.statSync(realPath);
-			if ( stat.isDirectory() ) {
-				walk(realPath);
-			} else {
-				fileList.push(realPath);
-			}
-		});
+		try {
+			fs.readdirSync(dir).forEach(function (value, index) {
+				var realPath = path.resolve(dir, value),
+					stat = fs.statSync(realPath);
+				if (stat.isDirectory()) {
+					walk(realPath);
+				} else {
+					fileList.push(realPath);
+				}
+			});
+		} catch (err) {
+			console.log(err.message)
+		}
 	})(dir);
 	return fileList;
 }
@@ -77,8 +81,9 @@ function getEntries (dir, flag) {
 
 		function generatePathKey(filePath) {
 			var baseDir = path.resolve(__dirname, dir)
-				,key = filePath.slice(baseDir.length);
-			return key.slice(0, key.lastIndexOf('.'));  // 去掉后缀名
+				,key = filePath.slice(baseDir.length + 1)
+				,key = key.slice(0, key.lastIndexOf('.'));  // 去掉后缀名
+			return key.indexOf('\\') != -1 ? key.replace(/\\/g, '/') : key;  // 优化斜杠为反斜杠
 		}
 
 		return flag ? generatePathKey : generateUniqueKey;
@@ -93,7 +98,6 @@ function getEntries (dir, flag) {
 
     return dict;
 }
-
 
 module.exports = {
 	walkDir: walkDir,
