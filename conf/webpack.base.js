@@ -11,7 +11,7 @@ var conf = require('./index');
 var t = require('../shell/utils');
 
 var config = {
-    entry: t.getEntries(conf.entryFileDir, conf.entryKeyType),
+	entry: t.getEntries(conf.entryFileDir, conf.entryKeyType),
 	output: {
 		path: conf.assetsRoot,
 		publicPath: '/',
