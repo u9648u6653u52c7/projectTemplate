@@ -5,7 +5,6 @@
 
 var path = require('path');
 var webpack = require('webpack');
-var webpackMerge = require('webpack-merge');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var conf = require('./index');
 var t = require('../shell/utils');
@@ -80,6 +79,7 @@ var config = {
 		]
 	},
 	resolve: {
+		fallback: [path.resolve(conf.projectRoot, 'node_modules')],
 		alias: {
 			static: path.resolve(conf.projectRoot, 'static'),
 			components: path.resolve(conf.projectRoot, 'src/components')
@@ -88,4 +88,6 @@ var config = {
     }
 };
 
-module.exports = webpackMerge(config, {});
+config.entry['vendor'] = ['zepto', 'lodash'];
+
+module.exports = config;

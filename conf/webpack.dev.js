@@ -6,7 +6,6 @@
 var path = require('path');
 var webpack = require('webpack');
 var merge = require('webpack-merge');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var openBrowserPlugin = require('open-browser-webpack-plugin');
 var t = require('../shell/utils');
@@ -14,6 +13,12 @@ var conf = require('./index');
 var webpackBaseConfig = require('./webpack.base');
 var entries = webpackBaseConfig.entry;
 webpackBaseConfig.entry = null;
+
+webpackBaseConfig.plugins = t.createHtmlByHtmlWebpackPlugin(entries, {
+	baseName: conf.tplBaseName,
+	filters: ['vendor'],
+	chunks: ['vendor']
+});
 
 var config = {
 	entry: (function (entries) {
@@ -37,7 +42,6 @@ var config = {
 	plugins: [
 		// new webpack.optimize.CommonsChunkPlugin("commons", "commons.js"),
 		new ExtractTextPlugin("css/[name].css", {allChunks: true}),
-		new HtmlWebpackPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
 		new openBrowserPlugin({url: 'http://' + conf.dev.hostname + ':' + conf.dev.port})
 	],
