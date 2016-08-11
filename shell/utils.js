@@ -5,7 +5,8 @@
 
 var fs = require('fs');
 var path = require('path');
-
+var _ = require('lodash');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 /**
  * walkDir 文件夹遍历
@@ -33,7 +34,6 @@ function walkDir(dir) {
 	})(dir);
 	return fileList;
 }
-
 
 var entryFileTypeREG = /\.jsx?$/;
 
@@ -99,7 +99,55 @@ function getEntries (dir, flag) {
     return dict;
 }
 
+/**
+ * createHtmlByHtmlWebpackPlugin
+ * @param entries {object} webpackConfig.entry
+ * @param options {Object}
+ * {
+ *   baseName: 'tpl.html',
+ *   indexHtml: '',  // for spa app
+ *   filters: [],    // 过滤chunk
+ *   chunks: [],     // 手动添加公共模块：vendor,common~；该函数只添加了一个已知的入口点，
+ *   config: {}
+ * }
+ * @returns {Array}
+ */
+
+function createHtmlByHtmlWebpackPlugin(entries, options) {
+	var arr = [],
+		options = _.merge({
+			    baseName: 'tpl.html',
+				indexHtml: '',
+				filters: [],
+				chunks: [],
+				config: {}
+			}, options);
+
+	if ( _.isPlainObject(entries) ) {
+		for (var key in entries) {
+			if (entries.hasOwnProperty(key) && (options.filters.indexOf(key) == -1) ) {
+				var index = key.lastIndexOf('/');
+				arr.push(new HtmlWebpackPlugin(_.merge({
+					filename: (index != -1 ? key.slice(0, index) : key) + '.html',
+					template: path.resolve(path.dirname(_.last(entries[key])), options.baseName),
+					chunks: options.chunks.concat([key]),
+					inject: true,
+					chunksSortMode: 'auto'
+				},options.config)));
+			}
+		}
+	} else {
+		arr.push(new HtmlWebpackPlugin({
+			filename: 'index.html',
+			template: options.indexHtml
+		}));
+	}
+
+	return arr;
+}
+
 module.exports = {
 	walkDir: walkDir,
-	getEntries: getEntries
+	getEntries: getEntries,
+	createHtmlByHtmlWebpackPlugin: createHtmlByHtmlWebpackPlugin
 };
