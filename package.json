@@ -50,6 +50,7 @@
     "webpack-merge": "^0.14.1"
   },
   "dependencies": {
+    "handlebars": "^4.0.5",
     "lodash": "^4.14.2",
     "zepto": "^1.2.0"
   }
