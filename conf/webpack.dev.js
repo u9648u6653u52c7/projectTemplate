@@ -3,6 +3,7 @@
  * @date: 2016-08-06
  */
 
+var _ = require('lodash');
 var path = require('path');
 var webpack = require('webpack');
 var merge = require('webpack-merge');
@@ -17,7 +18,10 @@ webpackBaseConfig.entry = null;
 webpackBaseConfig.plugins = t.createHtmlByHtmlWebpackPlugin(entries, {
 	baseName: conf.tplBaseName,
 	filters: ['vendor'],
-	chunks: ['vendor']
+	chunks: ['vendor'],
+	config: {
+		chunksSortMode: 'dependency'
+	}
 });
 
 var config = {
@@ -40,7 +44,19 @@ var config = {
 		]
 	},
 	plugins: [
-		// new webpack.optimize.CommonsChunkPlugin("commons", "commons.js"),
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'vendor',
+			filename: 'js/vendor.js',
+			minChunks: Infinity
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'common',
+			filename: 'js/common.js',
+			minChunks: 2,
+			chunks: _.filter(_.keys(entries), function (value) {
+				return !(/vendor/.test(value));
+			})
+		}),
 		new ExtractTextPlugin("css/[name].css", {allChunks: true}),
 		new webpack.HotModuleReplacementPlugin(),
 		new openBrowserPlugin({url: 'http://' + conf.dev.hostname + ':' + conf.dev.port})
