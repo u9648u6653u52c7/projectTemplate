@@ -19,7 +19,7 @@ exports = module.exports = {
 	dev: {
 		hostname: 'localhost',
 		www: path.resolve(projectRoot, 'src'),
-		port: '8000'
+		port: '8080'
 	},
 
 	prod: {
