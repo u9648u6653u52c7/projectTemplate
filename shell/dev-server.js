@@ -33,6 +33,9 @@ var server = new webpackDevServer(webpack(webpackDevConfig), {
 
 });
 
-server.listen(conf.dev.port, conf.dev.hostname);
+server.listen(conf.dev.port, conf.dev.hostname, function (err) {
+	if (err) return console.log(err);
+	console.log('Listening at http://' + conf.dev.hostname + ':' + conf.dev.port + '\n');
+});
 
 
