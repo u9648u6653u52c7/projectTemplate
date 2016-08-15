@@ -18,18 +18,15 @@ webpackBaseConfig.entry = null;
 webpackBaseConfig.plugins = t.createHtmlByHtmlWebpackPlugin(entries, {
 	baseName: conf.tplBaseName,
 	filters: ['vendor'],
-	chunks: ['vendor'],
-	config: {
-		chunksSortMode: 'dependency'
-	}
+	chunks: ['vendor', 'common']
 });
 
 var config = {
 	entry: (function (entries) {
 		for ( var key in entries ) {
 			if ( entries.hasOwnProperty(key) ) {
-				entries[key] = ['webpack-dev-server/client?http://' + conf.dev.hostname + ':' + conf.dev.port + '/'
-					, "webpack/hot/dev-server"].concat(entries[key]);
+				entries[key] = ['webpack-dev-server/client?http://' + conf.dev.hostname + ':' + conf.dev.port,
+					"webpack/hot/dev-server"].concat(entries[key]);
 			}
 		}
 		return entries;
@@ -45,17 +42,18 @@ var config = {
 	},
 	plugins: [
 		new webpack.optimize.CommonsChunkPlugin({
-			name: 'vendor',
-			filename: 'js/vendor.js',
-			minChunks: Infinity
-		}),
-		new webpack.optimize.CommonsChunkPlugin({
 			name: 'common',
 			filename: 'js/common.js',
-			minChunks: 2,
+			minChunks: 3,
 			chunks: _.filter(_.keys(entries), function (value) {
 				return !(/vendor/.test(value));
 			})
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'vendor',
+			filename: 'js/vendor.js',
+			chunks: ['common'],
+			minChunks: Infinity
 		}),
 		new ExtractTextPlugin("css/[name].css", {allChunks: true}),
 		new webpack.HotModuleReplacementPlugin(),
