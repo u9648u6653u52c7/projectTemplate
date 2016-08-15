@@ -73,7 +73,7 @@ var config = {
 				}
 			},
 			{
-				test: require.resolve('zepto'),
+				test: require.resolve('zepto/dist/zepto.min'),
 				loader: 'exports?window.Zepto!script'
 			}
 		]
@@ -81,6 +81,8 @@ var config = {
 	resolve: {
 		fallback: [path.resolve(conf.projectRoot, 'node_modules')],
 		alias: {
+			zepto: 'zepto/dist/zepto.min.js',
+			lodash: 'lodash/lodash.min.js',
 			static: path.resolve(conf.projectRoot, 'static'),
 			components: path.resolve(conf.projectRoot, 'src/components')
 		},
