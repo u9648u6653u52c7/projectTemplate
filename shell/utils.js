@@ -148,8 +148,22 @@ function createHtmlByHtmlWebpackPlugin(entries, options) {
 	return arr;
 }
 
+
+/**
+ * generateHashString
+ * @param hashType {String}
+ * @param hashLength {Number}
+ * @returns {string} [hash:hashLenght] or [chunkhash:hashLength] or [contenthash:length]
+ */
+
+function generateHashString(hashType, hashLength) {
+	return !!hashLength ? (['[', hashType, ':', hashLength, ']']).join('')
+		: (['[', hashType, ']']).join('');
+}
+
 module.exports = {
 	walkDir: walkDir,
 	getEntries: getEntries,
-	createHtmlByHtmlWebpackPlugin: createHtmlByHtmlWebpackPlugin
+	createHtmlByHtmlWebpackPlugin: createHtmlByHtmlWebpackPlugin,
+	generateHashString: generateHashString
 };
