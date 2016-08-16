@@ -12,9 +12,12 @@ exports = module.exports = {
 	projectRoot: projectRoot,
 	projectName: projectName,
 	entryFileDir: path.resolve(projectRoot, 'src/pages'),
+	entryFileName: 'page.js',
 	entryKeyType: true,  // 入口对象的key值类型：true为path类型，false为文件名
 	assetsRoot: path.resolve(projectRoot, 'dist'),
-	tplBaseName: 'index.html',
+	assetsPublicPath: '/',
+	hashLength: 8,
+	tplBaseName: 'template.html',
 	
 	dev: {
 		hostname: 'localhost',
