@@ -55,13 +55,13 @@ var config = {
 			chunks: ['common'],
 			minChunks: Infinity
 		}),
-		new ExtractTextPlugin("css/[name].css", {allChunks: true}),
+		new ExtractTextPlugin('css/[name].css', {allChunks: true}),
 		new webpack.HotModuleReplacementPlugin(),
 		new openBrowserPlugin({url: 'http://' + conf.dev.hostname + ':' + conf.dev.port})
 	],
 	eslint: {
 		configFile: path.resolve(conf.projectRoot, '.eslintrc.js'),
-		formatter: require("eslint-friendly-formatter")
+		formatter: require('eslint-friendly-formatter')
 	},
 	devtool: '#eval-source-map'
 };
