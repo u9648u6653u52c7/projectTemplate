@@ -153,7 +153,7 @@ function createHtmlByHtmlWebpackPlugin(entries, options) {
  * generateHashString
  * @param hashType {String}
  * @param hashLength {Number}
- * @returns {string} [hash:hashLenght] or [chunkhash:hashLength] or [contenthash:length]
+ * @returns {string} [hash:hashLength] or [chunkhash:hashLength] or [contenthash:hashLength]
  */
 
 function generateHashString(hashType, hashLength) {
