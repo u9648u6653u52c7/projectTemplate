@@ -40,6 +40,7 @@ var entryFileTypeREG = /\.jsx?$/;
 /**
  * getEntries 获取webpack的入口对象
  * @param {String} dir
+ * @param {String} entryFileName
  * @param {Boolean} flag 控制入口对象key值的输出形式：
  * flag为真时key值以路径形式输出；
  * flag为假时key值以文件名形式输出，文件名重复时会以其所在文件夹的名称命名key值；
@@ -47,8 +48,9 @@ var entryFileTypeREG = /\.jsx?$/;
  * @returns {Object} dict
  */
 
-function getEntries (dir, flag) {
+function getEntries (dir, entryFileName, flag) {
 	var dict = {}
+		,entryREG = new RegExp(entryFileName || 'entry.js')
 		,flag = flag || false
 		,files = walkDir(dir);
 
@@ -91,7 +93,7 @@ function getEntries (dir, flag) {
 	})(dir);
 
 	files.forEach(function (value, index) {
-		if ( entryFileTypeREG.test(value) ) {
+		if ( entryFileTypeREG.test(value) && entryREG.test(value) ) {
 			dict[generateKey(value, dict)] = [value];
 		}
 	});
@@ -101,7 +103,7 @@ function getEntries (dir, flag) {
 
 /**
  * createHtmlByHtmlWebpackPlugin
- * @param entries {object} webpackConfig.entry
+ * @param entries {object or Sting} webpackConfig.entry
  * @param options {Object}
  * {
  *   baseName: 'tpl.html',
