@@ -26,7 +26,8 @@ exports = module.exports = {
 	},
 
 	prod: {
-
+		assetsRoot: path.resolve(projectRoot, 'dist'),
+		assetsPublicPath: '/'
 	}
 
 };
