@@ -8,6 +8,7 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var conf = require('./index');
 var t = require('../shell/utils');
+var hash = t.generateHashString('hash', conf.hashLength);
 
 var config = {
 	entry: t.getEntries(conf.entryFileDir, conf.entryFileName, conf.entryKeyType),
@@ -67,7 +68,7 @@ var config = {
 				query: {
 			        limit: 8192,
 					context: conf.entryFileDir,
-					name: 'img/[path][name].[hash:7].[ext]'
+					name: 'img/[path][name].' + hash + '.[ext]'
 				}
 			},
 			{
@@ -76,7 +77,7 @@ var config = {
 				query: {
 				    limit: 8192,
 					context: conf.entryFileDir,
-					name: 'fonts/[path][name].[hash:7].[ext]'
+					name: 'fonts/[path][name].' + hash + '.[ext]'
 
 				}
 			},
