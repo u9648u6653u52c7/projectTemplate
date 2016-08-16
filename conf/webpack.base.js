@@ -19,7 +19,8 @@ var config = {
 	},
 	module: {
 		noParse: [
-			/lodash\.min\.js/
+			/lodash\.min\.js/,
+			/vue\.min\.js/
 		],
 		loaders: [
 			{
@@ -43,6 +44,10 @@ var config = {
 				query: {
 					prependFilenameComment: conf.entryFileDir
 				}
+			},
+			{
+				test: /\.vue$/,
+				loader: 'vue'
 			},
 			{
 				test: /\.html$/,
@@ -84,15 +89,21 @@ var config = {
 	resolve: {
 		fallback: [path.resolve(conf.projectRoot, 'node_modules')],
 		alias: {
+			vue: 'vue/dist/vue.min.js',
 			zepto: 'zepto/dist/zepto.min.js',
 			lodash: 'lodash/lodash.min.js',
 			static: path.resolve(conf.projectRoot, 'static'),
 			components: path.resolve(conf.projectRoot, 'src/components')
 		},
         extensions: ['', '.js', '.jsx', '.json']
-    }
+    },
+	vue: {
+		loaders: {
+			css: ExtractTextPlugin.extract('style?modules', 'css')
+		}
+	}
 };
 
-config.entry['vendor'] = ['zepto', 'lodash'];
+config.entry['vendor'] = ['zepto', 'lodash'];   // 根据需要把vue加进vendor
 
 module.exports = config;
