@@ -32,6 +32,13 @@ var config = {
 			{
 				test: /\.css$/,
 				loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
+			},
+			{
+				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+				loaders: [
+					'url?limit=8192&context=' +  conf.entryFileDir + '&name=img/[path][name].' + t.generateHashString('hash', conf.hashLength) + '.[ext]',
+					'image-webpack?{progressive:true, optimizationLevel: 7, interlaced: false, pngquant:{quality: "65-90", speed: 4}}'
+				]
 			}
 		]
 	},
