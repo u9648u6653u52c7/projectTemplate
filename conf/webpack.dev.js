@@ -56,6 +56,7 @@ var config = {
 			minChunks: Infinity
 		}),
 		new ExtractTextPlugin('css/[name].css', {allChunks: true}),
+		new webpack.optimize.OccurenceOrderPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
 		new openBrowserPlugin({url: 'http://' + conf.dev.hostname + ':' + conf.dev.port})
 	],
