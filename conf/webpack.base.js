@@ -60,7 +60,7 @@ var config = {
 			},
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract('style?modules', 'css')
+				loader: ExtractTextPlugin.extract('style', 'css')
 			},
 			{
 				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -100,7 +100,7 @@ var config = {
     },
 	vue: {
 		loaders: {
-			css: ExtractTextPlugin.extract('style?modules', 'css')
+			css: ExtractTextPlugin.extract('style', 'css')
 		}
 	}
 };
