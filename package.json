@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "node shell/dev-server.js",
     "build": "node shell/build.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start"
   },
   "keywords": [
     "gulp",
@@ -40,7 +40,14 @@
     "html-loader": "^0.4.3",
     "html-webpack-plugin": "^2.22.0",
     "image-webpack-loader": "^2.0.0",
+    "jasmine-core": "^2.4.1",
     "json-loader": "^0.5.4",
+    "karma": "^1.2.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^1.8.0",
     "open-browser-webpack-plugin": "0.0.2",
     "ora": "^0.3.0",
     "raw-loader": "^0.5.1",
