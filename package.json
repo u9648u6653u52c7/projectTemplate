@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "node shell/dev-server.js",
     "build": "node shell/build.js",
-    "test": "karma start"
+    "test": "karma start ./conf/karma.conf.js"
   },
   "keywords": [
     "gulp",
