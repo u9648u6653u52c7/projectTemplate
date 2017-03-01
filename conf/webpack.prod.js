@@ -6,7 +6,7 @@
 var _ = require('lodash');
 var path = require('path');
 var webpack = require('webpack');
-var merge = require('webpack-merge');
+var webpackMerge = require('webpack-merge');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var t = require('../shell/utils');
 var conf = require('./index');
@@ -31,14 +31,39 @@ var config = {
 		loaders: [
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
+				loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
+            }
+          ]
+        })
 			},
 			{
 				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-				loaders: [
-					'url?limit=8192&context=' +  conf.entryFileDir + '&name=img/[path][name].' + t.generateHashString('hash', conf.hashLength) + '.[ext]',
-					'image-webpack?{progressive:true, optimizationLevel: 7, interlaced: false, pngquant:{quality: "65-90", speed: 4}}'
-				]
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+              context: conf.entryFileDir,
+              name: 'img/[path][name].' + t.generateHashString('hash', conf.hashLength) + '.[ext]'
+            }
+          },
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              progressive:true, 
+              optimizationLevel: 7, 
+              interlaced: false, 
+              pngquant:{quality: "65-90", speed: 4}
+            }
+          }
+        ]
 			}
 		]
 	},
@@ -48,7 +73,6 @@ var config = {
 				warnings: false
 			}
 		}),
-		new webpack.optimize.OccurenceOrderPlugin(),
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'common',
 			filename: 'js/common.' + chunkhash + '.js',
@@ -63,11 +87,12 @@ var config = {
 			chunks: ['common'],
 			minChunks: Infinity
 		}),
-		new ExtractTextPlugin('css/[name].' + t.generateHashString('contenthash', conf.hashLength) + '.css',
-			{allChunks: true}
-		)
+		new ExtractTextPlugin({
+        filename: 'css/[name].' + t.generateHashString('contenthash', conf.hashLength) + '.css',
+        allChunks: true
+      })
 	],
 	devtool: '#source-map'
 };
 
-module.exports = merge.smart(webpackBaseConfig, config);
+module.exports = webpackMerge.smart(webpackBaseConfig, config);

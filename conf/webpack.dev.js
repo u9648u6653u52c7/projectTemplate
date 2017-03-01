@@ -6,7 +6,7 @@
 var _ = require('lodash');
 var path = require('path');
 var webpack = require('webpack');
-var merge = require('webpack-merge');
+var webpackMerge = require('webpack-merge');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var openBrowserPlugin = require('open-browser-webpack-plugin');
 var t = require('../shell/utils');
@@ -32,10 +32,14 @@ var config = {
 		return entries;
 	})(entries),
 	module: {
-		preLoaders: [
+		rules: [
 			{
 				test: /\.jsx?$/,
-				loader: "eslint",
+        enforce: 'pre',
+				loader: "eslint-loader",
+        options: {
+          formatter: require('eslint-friendly-formatter')
+        },
 				exclude: /node_modules|static/
 			}
 		]
@@ -55,16 +59,14 @@ var config = {
 			chunks: ['common'],
 			minChunks: Infinity
 		}),
-		new ExtractTextPlugin('css/[name].css', {allChunks: true}),
-		new webpack.optimize.OccurenceOrderPlugin(),
+		new ExtractTextPlugin({
+      filename: 'css/[name].css',
+      allChunks: true
+    }),
 		new webpack.HotModuleReplacementPlugin(),
 		new openBrowserPlugin({url: 'http://' + conf.dev.hostname + ':' + conf.dev.port})
 	],
-	eslint: {
-		configFile: path.resolve(conf.projectRoot, '.eslintrc.js'),
-		formatter: require('eslint-friendly-formatter')
-	},
 	devtool: '#eval-source-map'
 };
 
-module.exports = merge(webpackBaseConfig, config);
+module.exports = webpackMerge(webpackBaseConfig, config);

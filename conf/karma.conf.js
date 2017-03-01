@@ -2,18 +2,18 @@
 // Generated on Wed Aug 24 2016 15:05:50 GMT+0800 (中国标准时间)
 
 var path = require('path');
-var merge = require('webpack-merge');
+var webpackMerge = require('webpack-merge');
 var conf= require('./index');
 var webpackBaseConfig = require('./webpack.base');
 
-var webpackConfig = merge.smart(webpackBaseConfig, {
+var webpackConfig = webpackMerge.smart(webpackBaseConfig, {
 	devtool: 'inline-source-map'
 });
 
-delete webpackConfig.entry;
+// delete webpackConfig.entry;
 
-webpackConfig.module.loaders.some(function (loader) {
-	if (loader.loader === 'babel') {
+webpackConfig.module.rules.some(function (loader) {
+	if (loader.loader === 'babel-loader') {
 		loader.include = [
 			loader.include,
 			path.resolve(conf.projectRoot, 'test')
@@ -41,7 +41,7 @@ module.exports = function(config) {
     // list of files to exclude
     exclude: [
     ],
-	  
+
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
