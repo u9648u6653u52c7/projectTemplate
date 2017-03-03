@@ -7,8 +7,8 @@ require('shelljs/global');
 
 var ora = require('ora');
 var webpack = require('webpack');
-var config = require('../conf');
-var webpackProdConfig = require('../conf/webpack.prod');
+var baseConfig = require('../config');
+var webpackProdConfig = require('../config/webpack.prod');
 
 console.log(
 	'  Tip:\n' +
@@ -19,7 +19,7 @@ console.log(
 var spinner = ora('building for production...');
 spinner.start();
 
-var assetsPath = config.prod.assetsRoot;
+var assetsPath = baseConfig.assetsRoot;
 rm('-rf', assetsPath);
 mkdir('-p', assetsPath);
 

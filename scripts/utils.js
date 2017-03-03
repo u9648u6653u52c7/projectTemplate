@@ -8,6 +8,8 @@ var path = require('path');
 var _ = require('lodash');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
+var entryFileTypeREG = /\.jsx?$/;
+
 /**
  * walkDir 文件夹遍历
  * @param {String} dir
@@ -35,45 +37,19 @@ function walkDir(dir) {
 	return fileList;
 }
 
-var entryFileTypeREG = /\.jsx?$/;
-
 /**
  * getEntries 获取webpack的入口对象
  * @param {String} dir
  * @param {String} entryFileName
- * @param {Boolean} flag 控制入口对象key值的输出形式：
- * flag为真时key值以路径形式输出；
- * flag为假时key值以文件名形式输出，文件名重复时会以其所在文件夹的名称命名key值；
- * flag默认为假；
  * @returns {Object} dict
  */
 
-function getEntries (dir, entryFileName, flag) {
+function getEntries(dir, entryFileName='entry.js') {
 	var dict = {}
-		,entryREG = new RegExp(entryFileName || 'entry.js')
-		,flag = flag || false
+		,entryREG = new RegExp(entryFileName)
 		,files = walkDir(dir);
 
 	var generateKey = (function (dir) {
-
-		/**
-		 * generateUniqueKey 生成入口对象的唯一key值
-		 * @param {String} filePath
-		 * @param {Object} dict
-		 * @returns {String}
-		 */
-
-		function generateUniqueKey(filePath, dict) {
-			var arr = filePath.split(path.sep)
-				,i = arr.length
-				,key = null;
-			for (i-=1; 0 <= i; i--) {
-				key = entryFileTypeREG.test(arr[i]) ? arr[i].slice(0, arr[i].lastIndexOf('.')) : arr[i];
-				if ( !dict.hasOwnProperty(key) ) {
-					return key;
-				}
-			}
-		}
 
 		/**
 		 * generatePathKey
@@ -88,13 +64,13 @@ function getEntries (dir, entryFileName, flag) {
 			return key.indexOf('\\') != -1 ? key.replace(/\\/g, '/') : key;  // 优化斜杠为反斜杠
 		}
 
-		return flag ? generatePathKey : generateUniqueKey;
+		return generatePathKey;
 
 	})(dir);
 
 	files.forEach(function (value, index) {
 		if ( entryFileTypeREG.test(value) && entryREG.test(value) ) {
-			dict[generateKey(value, dict)] = [value];
+			dict[generateKey(value)] = [value];
 		}
 	});
 
@@ -118,12 +94,12 @@ function getEntries (dir, entryFileName, flag) {
 function createHtmlByHtmlWebpackPlugin(entries, options) {
 	var arr = [],
 		options = _.merge({
-			    baseName: 'tpl.html',
-				indexHtml: '',
-				filters: [],
-				chunks: [],
-				config: {}
-			}, options);
+      baseName: 'template.html',
+      indexHtml: '',
+      filters: [],
+      chunks: [],
+      config: {}
+    }, options);
 
 	if ( _.isPlainObject(entries) ) {
 		for (var key in entries) {

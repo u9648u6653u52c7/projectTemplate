@@ -8,27 +8,27 @@ var path = require('path');
 var webpack = require('webpack');
 var webpackMerge = require('webpack-merge');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var t = require('../shell/utils');
-var conf = require('./index');
+var utils = require('../scripts/utils');
+var baseConfig = require('./index');
 var webpackBaseConfig = require('./webpack.base');
 var entries = webpackBaseConfig.entry;
-var chunkhash = t.generateHashString('chunkhash', conf.hashLength);
+var chunkhash = utils.generateHashString('chunkhash', baseConfig.hashLength);
 
-webpackBaseConfig.plugins = t.createHtmlByHtmlWebpackPlugin(entries, {  // HtmlWebpackPlugin也有需要优化的地方
-	baseName: conf.tplBaseName,
+webpackBaseConfig.plugins = utils.createHtmlByHtmlWebpackPlugin(entries, {  // HtmlWebpackPlugin也有需要优化的地方
+	baseName: baseConfig.htmlTemplateName,
 	filters: ['vendor'],
 	chunks: ['vendor', 'common']
 });
 
 var config = {
 	output: {
-		path: conf.prod.assetsRoot,
-		publicPath: conf.prod.assetsPublicPath,
+		path: baseConfig.prod.assetsRoot,
+		publicPath: baseConfig.prod.assetsPublicPath,
 		filename: 'js/[name].' + chunkhash + '.js',
 		chunkFilename: 'js/[id].' + chunkhash + '.js'
 	},
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.css$/,
 				loader: ExtractTextPlugin.extract({
@@ -50,16 +50,16 @@ var config = {
             loader: 'url-loader',
             options: {
               limit: 8192,
-              context: conf.entryFileDir,
-              name: 'img/[path][name].' + t.generateHashString('hash', conf.hashLength) + '.[ext]'
+              context: baseConfig.entryFileDir,
+              name: 'img/[path][name].' + utils.generateHashString('hash', baseConfig.hashLength) + '.[ext]'
             }
           },
           {
             loader: 'image-webpack-loader',
             options: {
-              progressive:true, 
-              optimizationLevel: 7, 
-              interlaced: false, 
+              progressive:true,
+              optimizationLevel: 7,
+              interlaced: false,
               pngquant:{quality: "65-90", speed: 4}
             }
           }
@@ -88,7 +88,7 @@ var config = {
 			minChunks: Infinity
 		}),
 		new ExtractTextPlugin({
-        filename: 'css/[name].' + t.generateHashString('contenthash', conf.hashLength) + '.css',
+        filename: 'css/[name].' + utils.generateHashString('contenthash', baseConfig.hashLength) + '.css',
         allChunks: true
       })
 	],

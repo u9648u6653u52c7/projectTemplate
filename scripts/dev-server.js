@@ -6,14 +6,14 @@
 
 var webpack = require('webpack');
 var webpackDevServer = require('webpack-dev-server');
-var conf = require('../conf');
-var webpackDevConfig = require('../conf/webpack.dev');
+var baseConfig = require('../config');
+var webpackDevConfig = require('../config/webpack.dev');
 
 var server = new webpackDevServer(webpack(webpackDevConfig), {
 	// webpack-dev-server options
 
-	contentBase: conf.dev.www,
-	publicPath: conf.publicPath,
+	contentBase: baseConfig.dev.www,
+	publicPath: baseConfig.publicPath,
 	hot: true,
 	historyApiFallback: false,
 	compress: true,
@@ -33,9 +33,9 @@ var server = new webpackDevServer(webpack(webpackDevConfig), {
 
 });
 
-server.listen(conf.dev.port, conf.dev.hostname, function (err) {
+server.listen(baseConfig.dev.port, baseConfig.dev.hostname, function (err) {
 	if (err) return console.log(err);
-	console.log('Listening at http://' + conf.dev.hostname + ':' + conf.dev.port + '\n');
+	console.log('Listening at http://' + baseConfig.dev.hostname + ':' + baseConfig.dev.port + '\n');
 });
 
 
