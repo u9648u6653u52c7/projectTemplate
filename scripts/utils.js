@@ -123,9 +123,9 @@ function createHtmlByHtmlWebpackPlugin(entries, options) {
     let templatePath = null;
     
     if ( _.isArray(entries) ) {
-      templatePath = path.resolve(path.dirname(entries[0], config.htmlTemplateName));
+      templatePath = path.resolve(path.dirname(entries[0]), config.htmlTemplateName);
     } else if (_.isString(entries)) {
-      templatePath = path.resolve(path.dirname(entries, config.htmlTemplateName));
+      templatePath = path.resolve(path.dirname(entries), config.htmlTemplateName);
     }
     
 		arr.push(new HtmlWebpackPlugin({
