@@ -111,7 +111,7 @@ function createHtmlByHtmlWebpackPlugin(entries, options) {
 				arr.push(new HtmlWebpackPlugin(_.merge({
 					filename: fileName + '.html',
 					template: templatePath,
-					chunks: config.publicChunks.push(chunkName),
+					chunks: config.publicChunks.concat([chunkName]),
 					inject: true,
 					chunksSortMode: 'auto'
 				},options.htmlWepackPluginConfig)));
@@ -119,15 +119,15 @@ function createHtmlByHtmlWebpackPlugin(entries, options) {
 		}
 
 	} else {
-    
+
     let templatePath = null;
-    
+
     if ( _.isArray(entries) ) {
       templatePath = path.resolve(path.dirname(entries[0]), config.htmlTemplateName);
     } else if (_.isString(entries)) {
       templatePath = path.resolve(path.dirname(entries), config.htmlTemplateName);
     }
-    
+
 		arr.push(new HtmlWebpackPlugin({
 			filename: 'index.html',
 			template: templatePath
