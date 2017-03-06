@@ -38,10 +38,10 @@ const config = {
 
 		rules: [
       {
-				test: /\.jsx$/,
+				test: /\.es$/,
 				loader: 'babel-loader',
 				options: {
-				  presets: ['es2015'],
+				  presets: ['latest'],
 				  plugins: ['transform-runtime'],
 				  cacheDirectory: true
 				},
@@ -73,6 +73,14 @@ const config = {
           use: 'css-loader'
         })
 			},
+
+      {
+        test: /\.less$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'less-loader']
+        })
+      },
 
 			{
 				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -106,8 +114,38 @@ const config = {
 				use: ['exports-loader?Zepto','script-loader']
 			}
 		]
-	}
+	},
+
+  plugins: []
 
 };
+
+// eslint-loader 只在开发过程中使用
+
+process.env.NODE_ENV !== 'production' &&  config.module.rules.push({
+  enforce: 'pre',
+  test: /\.jsx?$/,
+  loader: "eslint-loader",
+  options: {
+    formatter: require('eslint-friendly-formatter')
+  },
+  exclude: /node_modules|bower_components/
+});
+
+// html页面生成
+
+config.plugins = (config.plugins || []).concat(utils.createHtmlByHtmlWebpackPlugin(config.entry, {
+  htmlTemplateName: baseConfig.htmlTemplateName,
+  excludeChunks: ['vendor', 'common'],
+  publicChunks:  ['vendor', 'common'],
+  htmlWepackPluginConfig: {
+    minify: process.env.NODE_ENV === 'production' ? {
+      minifyCSS: true,
+      collapseWhitespace: true,
+      removeComments: true,
+      removeScriptTypeAttributes: true
+    } : false
+  }
+}));
 
 module.exports = config;
