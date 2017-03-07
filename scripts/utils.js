@@ -114,7 +114,7 @@ function createHtmlByHtmlWebpackPlugin(entries, options) {
 					chunks: config.publicChunks.concat([chunkName]),
 					inject: true,
 					chunksSortMode: 'auto'
-				},options.htmlWepackPluginConfig)));
+				},config.htmlWepackPluginConfig)));
       }
 		}
 
