@@ -6,6 +6,7 @@
 const path = require('path');
 const utils = require('../scripts/utils');
 const baseConfig = require('./index');
+const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const entryFiles = utils.getEntries(baseConfig.entryFileDir, baseConfig.entryFileName);
 
@@ -147,5 +148,37 @@ config.plugins = (config.plugins || []).concat(utils.createHtmlByHtmlWebpackPlug
     } : false
   }
 }));
+
+// css文件提取
+
+config.plugins = (config.plugins || []).concat([
+  new ExtractTextPlugin({
+    filename: process.env.NODE_ENV !== 'production' ? 'css/[name].css'
+      : ('css/[name].' + utils.generateHashString('contenthash', baseConfig.hashLength) + '.css'),
+    allChunks: true
+  })
+]);
+
+// 公共模块的提取
+
+config.plugins = (config.plugins || []).concat([
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendor',
+    filename: process.env.NODE_ENV !== 'production' ? 'js/vendor.js' : ('js/vendor.' + chunkhash + '.js'),
+    minChunks: Infinity,
+  }),
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'common',
+    filename: process.env.NODE_ENV !== 'production' ? 'js/common.js' : ('js/common.' + chunkhash + '.js'),
+    minChunks: 2,
+    chunks: Object.keys(config.entry).filter(function (value) {
+      return !(/vendor/.test(value));
+    })
+  })
+]);
+
+// devtool
+
+confing.devtool = process.env.NODE_ENV !== 'production' ? '#eval-source-map' : '#source-map';
 
 module.exports = config;
