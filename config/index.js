@@ -19,8 +19,14 @@ module.exports = {
 
 	dev: {
 		hostname: 'localhost',
-		www: path.resolve(projectRoot, 'src'),
-		port: '8080'
+    port: '8080',
+    publicPath: '/',
+    contentBase: path.resolve(projectRoot, 'src'),
+    // proxy: {},
+    // setup(app){},
+    // staticOptions: {},
+    // 模块热更新
+    hot: false
 	},
 
 	prod: {
