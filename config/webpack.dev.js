@@ -3,72 +3,33 @@
  * @date: 2016-08-06
  */
 
-var _ = require('lodash');
+process.env.NODE_ENV = 'dev';
+
 var path = require('path');
-var webpack = require('webpack');
-var webpackMerge = require('webpack-merge');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var openBrowserPlugin = require('open-browser-webpack-plugin');
-var utils = require('../scripts/utils');
 var baseConfig = require('./index');
 var webpackBaseConfig = require('./webpack.base');
-var entries = webpackBaseConfig.entry;
+var webpack = require('webpack');
+var openBrowserPlugin = require('open-browser-webpack-plugin');
 
-webpackBaseConfig.entry = null;
 
-webpackBaseConfig.plugins = utils.createHtmlByHtmlWebpackPlugin(entries, {
-	baseName: baseConfig.htmlTemplateName,
-	filters: ['vendor'],
-	chunks: ['vendor', 'common']
+// 页面自动刷新, 具体参考 http://webpack.github.io/docs/webpack-dev-server.html
+
+const pageAutoRefreshSupportString = 'webpack-dev-server/client?http://'
+                                      + baseConfig.dev.hostname + ':' + baseConfig.dev.port;
+const HMRSupportString = 'webpack/hot/dev-server';
+
+Object.keys(webpackBaseConfig.entry).forEach(function (value) {
+  baseConfig.dev.hot && webpackBaseConfig.entry[value].unshift(HMRSupportString);
+  webpackBaseConfig.entry[value].unshift(pageAutoRefreshSupportString);
 });
 
-var config = {
-	entry: (function (entries) {
-		for ( var key in entries ) {
-			if ( entries.hasOwnProperty(key) ) {
-				entries[key] = ['webpack-dev-server/client?http://' + baseConfig.dev.hostname + ':' + baseConfig.dev.port,
-					"webpack/hot/dev-server"].concat(entries[key]);
-			}
-		}
-		return entries;
-	})(entries),
-  
-	module: {
-		rules: [
-			{
-				test: /\.jsx?$/,
-        enforce: 'pre',
-				loader: "eslint-loader",
-        options: {
-          formatter: require('eslint-friendly-formatter')
-        },
-				exclude: /node_modules/
-			}
-		]
-	},
-	plugins: [
-		new webpack.optimize.CommonsChunkPlugin({
-			name: 'common',
-			filename: 'js/common.js',
-			minChunks: 3,
-			chunks: _.filter(_.keys(entries), function (value) {
-				return !(/vendor/.test(value));
-			})
-		}),
-		new webpack.optimize.CommonsChunkPlugin({
-			name: 'vendor',
-			filename: 'js/vendor.js',
-			chunks: ['common'],
-			minChunks: Infinity
-		}),
-		new ExtractTextPlugin({
-      filename: 'css/[name].css',
-      allChunks: true
-    }),
-		new webpack.HotModuleReplacementPlugin(),
-		new openBrowserPlugin({url: 'http://' + baseConfig.dev.hostname + ':' + baseConfig.dev.port})
-	],
-	devtool: '#eval-source-map'
-};
+baseConfig.dev.hot && webpackBaseConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 
-module.exports = webpackMerge(webpackBaseConfig, config);
+// 本地开发服务器启动后浏览器自动打开
+
+webpackBaseConfig.plugins.push(new openBrowserPlugin({
+  url: 'http://' + baseConfig.dev.hostname + ':' + baseConfig.dev.port,
+  ignoreErrors: true
+}));
+
+module.exports = webpackBaseConfig;
