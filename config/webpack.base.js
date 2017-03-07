@@ -179,6 +179,6 @@ config.plugins = (config.plugins || []).concat([
 
 // devtool
 
-confing.devtool = process.env.NODE_ENV !== 'production' ? '#eval-source-map' : '#source-map';
+config.devtool = process.env.NODE_ENV !== 'production' ? '#eval-source-map' : '#source-map';
 
 module.exports = config;
