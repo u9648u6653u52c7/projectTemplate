@@ -124,7 +124,7 @@ const config = {
 
 process.env.NODE_ENV !== 'production' &&  config.module.rules.push({
   enforce: 'pre',
-  test: /\.jsx?$/,
+  test: /\.(jsx?|es)$/,
   loader: "eslint-loader",
   options: {
     formatter: require('eslint-friendly-formatter')
