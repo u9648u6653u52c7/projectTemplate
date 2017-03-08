@@ -21,14 +21,15 @@ projectTemplate即工程模板，创建之初衷是想利用Gulp、Webpack为开
         ├── scripts/    node脚本
         │  ├──
         │  ├── dev-server.js  本地开发服务器
+        │  ├── preview-server.js  打包后预览服务器
         │  ├── build.js  打包脚本
         │  ├── utils.js  工具函数
         │  ├──
         ├── config/     工程配置
         │  ├──
         │  ├── index.js  基础配置文件，在此可简单的修改webpack相关配置
-        │  ├── webpack.base.js  webpack的基础配置，主要是loader、resolve的配置
-        │  ├── webpack.dev.js  webpack开发配置，主要是eslint、livereload、hot module replacement及相关的插件
+        │  ├── webpack.base.js  webpack的基础配置，主要是loader、resolve、extract-text-webpack-plugin、CommonsChunkPlugin、devtool的配置
+        │  ├── webpack.dev.js   webpack开发配置，主要是livereload、HMR及相关的插件
         │  ├── webpack.prod.js  webpack生产配置，主要是代码的压缩混淆，图片压缩，加hash
         │  ├── karma.conf.js  测试配置
         │  ├──
@@ -66,9 +67,10 @@ projectTemplate即工程模板，创建之初衷是想利用Gulp、Webpack为开
 
 ### 使用方式
 projectTemplate现提供3条命令进行日常开发，命令需在工程目录下运行。
-> 1. npm run dev （开启本地开发环境）
-2. npm run build （代码打包）
-3. npm run test  （代码测试）
+> 1. npm run dev   （本地开发）
+2. npm run build   （代码打包）
+3. npm run test    （代码测试）
+4. npm run preview  (代码打包后预览)
 
 ### 备注
 因该项目还未成熟且在不断的优化过程中，在使用过程中可能会出现一定的问题。如果要使用的话可根据需要进行阉割或优化。
