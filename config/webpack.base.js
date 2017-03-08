@@ -161,6 +161,8 @@ config.plugins = (config.plugins || []).concat([
 
 // 公共模块的提取
 
+const chunkhash = utils.generateHashString('chunkhash', baseConfig.hashLength);
+
 config.plugins = (config.plugins || []).concat([
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
