@@ -3,24 +3,19 @@
  * @date: 2016-08-06
  */
 
-var _ = require('lodash');
-var path = require('path');
-var webpack = require('webpack');
-var webpackMerge = require('webpack-merge');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var utils = require('../scripts/utils');
-var baseConfig = require('./index');
-var webpackBaseConfig = require('./webpack.base');
-var entries = webpackBaseConfig.entry;
-var chunkhash = utils.generateHashString('chunkhash', baseConfig.hashLength);
+process.env.NODE_ENV = 'production';
 
-webpackBaseConfig.plugins = utils.createHtmlByHtmlWebpackPlugin(entries, {  // HtmlWebpackPlugin也有需要优化的地方
-	baseName: baseConfig.htmlTemplateName,
-	filters: ['vendor'],
-	chunks: ['vendor', 'common']
-});
+const webpack = require('webpack');
+const webpackMerge = require('webpack-merge');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
+const utils = require('../scripts/utils');
+const baseConfig = require('./index');
+const webpackBaseConfig = require('./webpack.base');
+const chunkhash = utils.generateHashString('chunkhash', baseConfig.hashLength);
 
-var config = {
+
+const config = {
 	output: {
 		path: baseConfig.prod.assetsRoot,
 		publicPath: baseConfig.prod.assetsPublicPath,
@@ -29,6 +24,8 @@ var config = {
 	},
 	module: {
 		rules: [
+      // css文件压缩
+
 			{
 				test: /\.css$/,
 				loader: ExtractTextPlugin.extract({
@@ -36,13 +33,33 @@ var config = {
           use: [
             {
               loader: 'css-loader',
-              options: {
-                sourceMap: true
-              }
+              options: {minimize: true, sourceMap: true}
             }
           ]
         })
 			},
+
+      // less文件压缩
+
+      {
+        test: /\.less$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {minimize: true, sourceMap: true}
+            },
+            {
+              loader:'less-loader',
+              options: {sourceMap: true}
+            }
+          ]
+        })
+      },
+
+      // 图片压缩
+
 			{
 				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         use: [
@@ -68,31 +85,24 @@ var config = {
 		]
 	},
 	plugins: [
+
+    // js文件压缩
+
 		new webpack.optimize.UglifyJsPlugin({
 			compress: {
 				warnings: false
-			}
+			},
+      sourceMap: true
 		}),
-		new webpack.optimize.CommonsChunkPlugin({
-			name: 'common',
-			filename: 'js/common.' + chunkhash + '.js',
-			minChunks: 3,
-			chunks: _.filter(_.keys(entries), function (value) {
-				return !(/vendor/.test(value));
-			})
-		}),
-		new webpack.optimize.CommonsChunkPlugin({
-			name: 'vendor',
-			filename: 'js/vendor.' + chunkhash + '.js',
-			chunks: ['common'],
-			minChunks: Infinity
-		}),
-		new ExtractTextPlugin({
-        filename: 'css/[name].' + utils.generateHashString('contenthash', baseConfig.hashLength) + '.css',
-        allChunks: true
-      })
-	],
-	devtool: '#source-map'
+
+    // 解决vendor不缓存的问题
+
+    new ChunkManifestPlugin({
+      filename: "js/manifest.json",
+      manifestVariable: "webpackManifest"
+    })
+
+  ]
 };
 
 module.exports = webpackMerge.smart(webpackBaseConfig, config);
