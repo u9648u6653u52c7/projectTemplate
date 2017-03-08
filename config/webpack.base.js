@@ -42,7 +42,7 @@ const config = {
 				test: /\.es$/,
 				loader: 'babel-loader',
 				options: {
-				  presets: ['latest'],
+				  presets: ['env'],
 				  plugins: ['transform-runtime'],
 				  cacheDirectory: true
 				},
