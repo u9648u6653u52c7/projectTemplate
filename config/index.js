@@ -31,7 +31,10 @@ module.exports = {
 
 	prod: {
 		assetsRoot: path.resolve(projectRoot, 'dist'),
-		assetsPublicPath: '/'
+		assetsPublicPath: '/',
+    // 预览服务器
+    hostname: 'localhost',
+    port: 3000
 	}
 
 };
