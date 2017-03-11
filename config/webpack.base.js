@@ -140,6 +140,17 @@ config.plugins = (config.plugins || []).concat(utils.createHtmlByHtmlWebpackPlug
   excludeChunks: ['vendor', 'common'],
   publicChunks:  ['vendor', 'common'],
   htmlWepackPluginConfig: {
+    chunksSortMode: function(prevChunk, nextChunk) {
+      const orders = ['vendor', 'common', baseConfig.entryFileName.split('.')[0]];
+      const order1 = orders.indexOf(prevChunk.names[0].split('/').pop());
+      const order2 = orders.indexOf(nextChunk.names[0].split('/').pop());
+      if (order1 > order2)
+        return 1;
+      else if (order1 < order2)
+        return -1;
+      else
+        return 0;
+    },
     minify: process.env.NODE_ENV === 'production' ? {
       minifyCSS: true,
       collapseWhitespace: true,
