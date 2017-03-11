@@ -41,8 +41,8 @@ projectTemplate即工程模板，创建之初衷是想利用Gulp、Webpack为开
         │         ├── index/   首页
         │              ├── images/  图片资源
         │              ├── page.css 样式文件，文件名称可以按照自己意愿命名
-        │              ├── page.js  脚本文件及webpack的入口文件，文件名称可以在/conf/index.js配置
-        │              ├── template.html 模板文件及要撰写的html文件，文件名称可以在/conf/index.js配置
+        │              ├── page.js  脚本文件及webpack的入口文件，文件名称可以在/config/index.js配置
+        │              ├── template.html 模板文件及要撰写的html文件，文件名称可以在/config/index.js配置
         │              ├──
         │
         ├── dist/  代码产出目录
