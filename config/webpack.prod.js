@@ -81,7 +81,37 @@ const config = {
             }
           }
         ]
-			}
+			},
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            css: ExtractTextPlugin.extract({
+              fallback: 'vue-style-loader',
+              use: [
+                {
+                  loader: 'css-loader',
+                  options: {minimize: true, sourceMap: true}
+                }
+              ]
+            }),
+            less: ExtractTextPlugin.extract({
+              fallback: 'vue-style-loader',
+              use: [
+                {
+                  loader: 'css-loader',
+                  options: {minimize: true, sourceMap: true}
+                },
+                {
+                  loader:'less-loader',
+                  options: {sourceMap: true}
+                }
+              ]
+            })
+          }
+        }
+      }
 		]
 	},
 	plugins: [

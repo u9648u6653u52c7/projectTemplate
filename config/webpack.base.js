@@ -13,7 +13,7 @@ const entryFiles = utils.getEntries(baseConfig.entryFileDir, baseConfig.entryFil
 const config = {
 
 	entry: Object.assign(entryFiles, {
-    vendor: ['zepto', 'lodash']
+    vendor: ['zepto', 'lodash', 'vue']
   }),
 
 	output: {
@@ -35,7 +35,7 @@ const config = {
   },
 
   module: {
-		noParse: /(?:node_modules|bower_components)(\\|\/)(lodash|jquery|vue)/,
+		noParse: /(?:node_modules|bower_components)(\\|\/)(lodash|jquery|vue[\/\\])/,
 
 		rules: [
       {
@@ -105,7 +105,19 @@ const config = {
 
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            css: ExtractTextPlugin.extract({
+              fallback: 'vue-style-loader',
+              use: ['css-loader']
+            }),
+            less: ExtractTextPlugin.extract({
+              fallback: 'vue-style-loader',
+              use: ['css-loader', 'less-loader']
+            })
+          }
+        }
       },
 
       // 有些第三方库不支持模块化, 通过使用script-loader和exports-loaderd导出模块供webpack使用
