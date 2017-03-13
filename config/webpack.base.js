@@ -63,7 +63,7 @@ const config = {
 				options: {
 					attrs: ['img:src', 'img:data-src'],
 					interpolate: 'require',
-          minimize: true
+          minimize: process.env.NODE_ENV !== 'production' ? false : true
 				}
 			},
 
