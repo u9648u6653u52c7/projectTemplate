@@ -47,7 +47,7 @@ projectTemplate即工程模板，创建之初衷是想利用Gulp、Webpack为开
         │
         ├── dist/  代码产出目录
         │
-        ├── test/  测试（目录可以意愿来创建，但是测试文件名称必须遵循*_test.js的命名规范，可在/conf/karma.conf.js修改配置）
+        ├── test/  测试（目录可以意愿来创建，但是测试文件名称必须遵循*_test.js的命名规范，可在/config/karma.conf.js修改配置）
         │
         ├── node_modules/     自动生成，包含node依赖以及开发依赖
         │
