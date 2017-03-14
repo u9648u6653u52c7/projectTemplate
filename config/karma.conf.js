@@ -3,30 +3,16 @@
 
 var path = require('path');
 var webpackMerge = require('webpack-merge');
-var conf= require('./index');
+var baseConfig= require('./index');
 var webpackBaseConfig = require('./webpack.base');
 
-var webpackConfig = webpackMerge.smart(webpackBaseConfig, {
-	devtool: 'inline-source-map'
-});
-
-// delete webpackConfig.entry;
-
-webpackConfig.module.rules.some(function (loader) {
-	if (loader.loader === 'babel-loader') {
-		loader.include = [
-			loader.include,
-			path.resolve(conf.projectRoot, 'test')
-		];
-		return true
-	}
-});
+delete webpackBaseConfig.entry;
 
 module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: conf.projectRoot,
+    basePath: baseConfig.projectRoot,
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -35,6 +21,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'test/*_test.js',
 	    'test/**/*_test.js'
     ],
 
@@ -45,14 +32,26 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'test/*_test.js': ['webpack', 'sourcemap'],
 	    'test/**/*_test.js': ['webpack', 'sourcemap']
     },
 
-    webpack: webpackConfig,
+    // you don't need to specify the entry option because
+    // karma watches the test entry points
+    // webpack watches dependencies
 
-	webpackMiddleware: {
-		noInfo: true
-	},
+    webpack: webpackMerge.smart(webpackBaseConfig, {
+      devtool: 'inline-source-map'
+    }),
+
+	  webpackMiddleware: {
+      // webpack-dev-middleware configuration
+		  noInfo: true,
+      stats: {
+        chunks: false,
+        colors: true
+      }
+	  },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
