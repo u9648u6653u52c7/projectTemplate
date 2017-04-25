@@ -163,12 +163,13 @@ config.plugins = (config.plugins || []).concat(utils.createHtmlByHtmlWebpackPlug
       else
         return 0;
     },
-    minify: process.env.NODE_ENV === 'production' ? {
+    /*minify: process.env.NODE_ENV === 'production' ? {
       minifyCSS: true,
       collapseWhitespace: true,
       removeComments: true,
       removeScriptTypeAttributes: true
-    } : false
+    } : false*/
+    minify: false
   }
 }));
 
