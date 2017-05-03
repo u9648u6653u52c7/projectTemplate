@@ -101,7 +101,7 @@ if (devProxy && _.isPlainObject(devProxy)) {
 
 devSetup && _.isFunction(devSetup) && (webpackDevServerOptions.setup = devSetup);
 
-devStaticOptions && _.isPlainObject(devStaticOptions) && (webpackDevServerOptions.setup = devSetup);
+devStaticOptions && _.isPlainObject(devStaticOptions) && (webpackDevServerOptions.staticOptions = devStaticOptions);
 
 
 const server = new webpackDevServer(compiler, webpackDevServerOptions);
