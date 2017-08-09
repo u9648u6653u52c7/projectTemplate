@@ -126,11 +126,11 @@ const config = {
 		}),
 
     // 解决vendor不缓存的问题
-
-    new ChunkManifestPlugin({
+    new webpack.HashedModuleIdsPlugin()
+    /* new ChunkManifestPlugin({
       filename: "js/manifest.json",
       manifestVariable: "webpackManifest"
-    })
+    }) */
 
   ]
 };
