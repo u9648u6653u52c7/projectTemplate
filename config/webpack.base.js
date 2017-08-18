@@ -194,6 +194,10 @@ config.plugins = (config.plugins || []).concat([
     },
     apiOptions: {
         cssImageRef: "~sprite.png"
+    },
+    spritesmithOptions: {
+      // padding: 10,          // icon 间距
+      // algorithm: 'top-down' // icon 的排列方式
     }
   })
 ]);
