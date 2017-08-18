@@ -8,6 +8,7 @@ const utils = require('../scripts/utils');
 const baseConfig = require('./index');
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const SpritesmithPlugin = require('webpack-spritesmith');  // 雪碧图插件
 const entryFiles = utils.getEntries(baseConfig.entryFileDir, baseConfig.entryFileName);
 
 const config = {
@@ -31,7 +32,7 @@ const config = {
       components: path.resolve(baseConfig.projectRoot, 'src/components/')
     },
     extensions: ['.js', '.jsx', '.json'],
-    modules: [path.resolve(baseConfig.projectRoot, 'node_modules')]
+    modules: [path.resolve(baseConfig.projectRoot, 'node_modules'), "spritesmith-generated"]
   },
 
   module: {
@@ -133,8 +134,7 @@ const config = {
 
 };
 
-// eslint-loader 只在开发过程中使用
-
+// eslint-loader 只在开发过程中使用, 推荐使用编辑器插件代替
 process.env.NODE_ENV !== 'production' &&  config.module.rules.push({
   enforce: 'pre',
   test: /\.(jsx?|es)$/,
@@ -146,7 +146,6 @@ process.env.NODE_ENV !== 'production' &&  config.module.rules.push({
 });
 
 // html页面生成
-
 config.plugins = (config.plugins || []).concat(utils.createHtmlByHtmlWebpackPlugin(config.entry, {
   htmlTemplateName: baseConfig.htmlTemplateName,
   excludeChunks: ['vendor', 'common'],
@@ -174,7 +173,6 @@ config.plugins = (config.plugins || []).concat(utils.createHtmlByHtmlWebpackPlug
 }));
 
 // css文件提取
-
 config.plugins = (config.plugins || []).concat([
   new ExtractTextPlugin({
     filename: process.env.NODE_ENV !== 'production' ? 'css/[name].css'
@@ -183,8 +181,24 @@ config.plugins = (config.plugins || []).concat([
   })
 ]);
 
-// 公共模块的提取
+// 雪碧图
+config.plugins = (config.plugins || []).concat([
+  new SpritesmithPlugin({
+    src: {
+        cwd: path.resolve(baseConfig.projectRoot, 'src/components/ui/icons/'),
+        glob: '*.png'
+    },
+    target: {
+        image: path.resolve(baseConfig.projectRoot, 'src/components/ui/icons/sprite.png'),
+        css: path.resolve(baseConfig.projectRoot, 'src/components/ui/sprite.less')
+    },
+    apiOptions: {
+        cssImageRef: "~sprite.png"
+    }
+  })
+]);
 
+// 公共模块的提取
 const chunkhash = utils.generateHashString('chunkhash', baseConfig.hashLength);
 
 config.plugins = (config.plugins || []).concat([
@@ -204,7 +218,6 @@ config.plugins = (config.plugins || []).concat([
 ]);
 
 // devtool
-
 config.devtool = process.env.NODE_ENV !== 'production' ? '#eval-source-map' : '#source-map';
 
 module.exports = config;
