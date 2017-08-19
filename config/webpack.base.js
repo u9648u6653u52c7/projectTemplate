@@ -193,7 +193,10 @@ config.plugins = (config.plugins || []).concat([
         css: path.resolve(baseConfig.projectRoot, 'src/components/ui/sprite.less')
     },
     apiOptions: {
-        cssImageRef: "~sprite.png"
+      cssImageRef: "~components/ui/sprite.png",
+        generateSpriteName: function(filePath) {
+          return 'icon-' + path.basename(filePath, path.extname(filePath));
+        }
     },
     spritesmithOptions: {
       // padding: 10,          // icon 间距
